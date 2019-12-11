@@ -1,0 +1,14 @@
+[package]
+name = "cargobench-plot"
+version = "0.1.0"
+authors = ["Hideo Hattori <hattori.hideo@panair.jp>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+regex = "1"
+lazy_static = "1.4.0"
+serde_json = "1.0.44"
+vega_lite_3 = "0.2.4"
+log = "0.4"
