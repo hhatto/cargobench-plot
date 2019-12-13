@@ -77,9 +77,13 @@ fn plot(results: Vec<BenchmarkResult>) {
         "x": {{"field": "testname", "type": "ordinal"}},
         "y": {{"field": "min", "type": "quantitative"}},
         "y2": {{"field": "max"}}
-      }}
+      }},
+      "size": {{"value": 5}}
     }}
-  ]
+  ],
+  "config": {{
+    "axisX": {{"labelAngle": -25}}
+  }}
 }}"##, data_string);
 
     log::debug!("spec=\n{}", spec);
