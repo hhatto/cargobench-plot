@@ -6,6 +6,8 @@
 
 use [Vega-Lite V3 for Rust](https://crates.io/crates/vega_lite_3).
 
+![sample of tera benchmark result](./samples/tera-bench.png)
+
 ## Installation
 
 ```
