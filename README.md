@@ -1,6 +1,6 @@
 # cargobench-plot
 
-plot to `cargo bench` result.
+`cargo bench` result plotting tool.
 
 *This crate is highly under development.*
 
