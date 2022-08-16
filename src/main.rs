@@ -1,11 +1,14 @@
-#[macro_use] extern crate lazy_static;
-use std::io::*;
+#[macro_use]
+extern crate lazy_static;
 use regex::Regex;
 use serde_json;
+use std::io::*;
 use vega_lite_3::*;
 
 lazy_static! {
-    static ref RE: Regex = Regex::new(r"test ([a-zA-Z0-9:_]+)\s+... bench:\s+([0-9,]+) ns/iter \(\+/- ([0-9,]+)\)").unwrap();
+    static ref RE: Regex =
+        Regex::new(r"test ([a-zA-Z0-9:_]+)\s+... bench:\s+([0-9,]+) ns/iter \(\+/- ([0-9,]+)\)")
+            .unwrap();
 }
 
 #[derive(Debug, Default)]
@@ -32,13 +35,11 @@ fn parse_cargo_bench_result(input: &str) -> Vec<BenchmarkResult> {
             median = cap[2].replace(",", "").parse().unwrap();
             deviation = cap[3].replace(",", "").parse().unwrap();
         }
-        results.push(
-            BenchmarkResult {
-                name,
-                median,
-                deviation,
-            }
-        );
+        results.push(BenchmarkResult {
+            name,
+            median,
+            deviation,
+        });
     }
 
     results
@@ -47,11 +48,18 @@ fn parse_cargo_bench_result(input: &str) -> Vec<BenchmarkResult> {
 fn plot(results: Vec<BenchmarkResult>) {
     let mut data_strings = vec![];
     for result in results.iter() {
-        data_strings.push(format!(r#"{{"testname": "{}", "median": {}, "min": {}, "max": {}}}"#, result.name, result.median, result.median - result.deviation, result.median + result.deviation));
+        data_strings.push(format!(
+            r#"{{"testname": "{}", "median": {}, "min": {}, "max": {}}}"#,
+            result.name,
+            result.median,
+            result.median - result.deviation,
+            result.median + result.deviation
+        ));
     }
     let data_string = data_strings.join(",");
 
-    let spec = format!(r##"{{
+    let spec = format!(
+        r##"{{
   "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
   "description": "cargo bench result",
   "data": {{"values": [{}]}},
@@ -84,7 +92,9 @@ fn plot(results: Vec<BenchmarkResult>) {
   "config": {{
     "axisX": {{"labelAngle": -25}}
   }}
-}}"##, data_string);
+}}"##,
+        data_string
+    );
 
     log::debug!("spec=\n{}", spec);
 
