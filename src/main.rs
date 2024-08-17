@@ -1,29 +1,26 @@
-#[macro_use]
-extern crate lazy_static;
 use regex::Regex;
-use serde_json;
 use std::io::*;
+use std::sync::LazyLock;
 use vega_lite_3::*;
 
-lazy_static! {
-    static ref RE: Regex =
-        Regex::new(r"test ([a-zA-Z0-9:_]+)\s+... bench:\s+([0-9,]+) ns/iter \(\+/- ([0-9,]+)\)")
-            .unwrap();
-}
+static RE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(r"test ([a-zA-Z0-9:_]+)\s+... bench:\s+([0-9,\.]+) ns/iter \(\+/- ([0-9,\.]+)\)")
+        .unwrap()
+});
 
 #[derive(Debug, Default)]
 struct BenchmarkResult {
     name: String,
-    median: usize,
-    deviation: usize,
+    median: f64,
+    deviation: f64,
 }
 
 fn parse_cargo_bench_result(input: &str) -> Vec<BenchmarkResult> {
     let mut results: Vec<BenchmarkResult> = vec![];
     for line in input.lines() {
         let mut name = String::new();
-        let mut median = 0;
-        let mut deviation = 0;
+        let mut median = 0.0;
+        let mut deviation = 0.0;
 
         // skip to not benchmark result's line
         if !line.contains("... bench:") {
